@@ -11,7 +11,8 @@ def main() -> None:
     # You can remove this if you alreacy have the bot name and username in the initial prompt.
     username = input("What is your name? ")
     bot_name = read_bot_name()
-    initial_prompt = f"{initial_prompt}\nYour name is {bot_name}.\nYou are talking to a person called {username}."
+    initial_prompt = f"{initial_prompt}\nI want you to act as if your name is {bot_name}.\n" \
+                           "And pretend you are talking to a person called {username}."
 
     user = User(username)
     bot = Bot(bot_name, initial_prompt)

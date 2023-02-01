@@ -1,4 +1,5 @@
 import os
+import functools
 
 from typing import Tuple
 from overrides import overrides
@@ -17,9 +18,10 @@ class Bot(MessageReceiver):
             raise ValueError("The OPENAI_API_KEY environment variable is not set.")
 
         self._name = name
-        self._initial_prompt = f"{initial_prompt}"
+        self._initial_prompt = initial_prompt
         self._start_seq = start_seq
         self._restart_seq = restart_seq
+        self._end_token = "<|endoftext|>"
 
     @property
     def name(self) -> str:
@@ -50,14 +52,14 @@ class Bot(MessageReceiver):
         history_separator = "\n" if formatted_history else ""
         formatted_message = f"{self._initial_prompt}\n\n \
                                    {formatted_history}{history_separator} \
-                                   {self._restart_seq}: {message}\n"
+                                   {self._restart_seq}: {message}{self._end_token}\n"
 
         # Request a response from the OpenAI API.
         response = openai.Completion.create(
-            model="text-davinci-003",
+            model="text-chat-davinci-002-20230126",
             prompt=formatted_message,
-            temperature=0.9,
-            max_tokens=150,
+            temperature=0.7,
+            max_tokens=500,
             top_p=1,
             frequency_penalty=0,
             presence_penalty=0.6,
@@ -69,11 +71,22 @@ class Bot(MessageReceiver):
         response_text = choices[0].get("text").strip()
 
         # Remove possible bot name followed by colon and stop sequences.
+        prefixes = [f"{self._name}:", f"{self._start_seq}:", f"{self._restart_seq}:"]
+        response_text = functools.reduce(
+            lambda text, prefix: self._remove_prefix(text, prefix), prefixes, response_text)
+
         response_text = self._remove_prefix(response_text, f"{self._name}:")
         response_text = self._remove_prefix(response_text, f"{self._start_seq}:")
         response_text = self._remove_prefix(response_text, f"{self._restart_seq}:")
+        response_text = self._remove_postfix(response_text, "<|im_end|>")
         return response_text
 
-    def _remove_prefix(self, text: str, prefix: str) -> str:
+    @staticmethod
+    def _remove_prefix(text: str, prefix: str) -> str:
         tokens = text.split(prefix, maxsplit=1)
         return tokens[1].strip() if len(tokens) > 1 else tokens[0]
+
+    @staticmethod
+    def _remove_postfix(text: str, postfix: str) -> str:
+        tokens = text.split(postfix, maxsplit=1)
+        return tokens[0].strip() if len(tokens) > 1 else tokens[0]
