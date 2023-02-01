@@ -12,7 +12,7 @@ def main() -> None:
     username = input("What is your name? ")
     bot_name = read_bot_name()
     initial_prompt = f"{initial_prompt}\nI want you to act as if your name is {bot_name}.\n" \
-                           "And pretend you are talking to a person called {username}."
+                          f"And pretend you are talking to a person called {username}."
 
     user = User(username)
     bot = Bot(bot_name, initial_prompt)

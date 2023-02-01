@@ -1,1 +1,1 @@
-Don't include any name prefixes such as Bot:, AI:, Robot: in your response.
+Don't include any name prefixes such as Bot:, AI:, Robot: or Model: in your response.

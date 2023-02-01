@@ -75,10 +75,7 @@ class Bot(MessageReceiver):
         response_text = functools.reduce(
             lambda text, prefix: self._remove_prefix(text, prefix), prefixes, response_text)
 
-        response_text = self._remove_prefix(response_text, f"{self._name}:")
-        response_text = self._remove_prefix(response_text, f"{self._start_seq}:")
-        response_text = self._remove_prefix(response_text, f"{self._restart_seq}:")
-        response_text = self._remove_postfix(response_text, "<|im_end|>")
+        response_text = response_text.rstrip("<|im_end|>")
         return response_text
 
     @staticmethod
