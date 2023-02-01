@@ -1,5 +1,5 @@
-# OpenAI GPT-3 Chatbot Demo
-A simple CLI chatbot program using the OpenAI's GPT-3 models.
+# OpenAI ChatGPT Chatbot Demo
+A simple CLI chatbot using the leaked model of OpenAI's ChatGPT.
 
 # Project Setup
 Create a virtual environment using the following command in the project directory:
