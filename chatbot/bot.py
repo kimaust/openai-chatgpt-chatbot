@@ -56,7 +56,7 @@ class Bot(MessageReceiver):
 
         # Request a response from the OpenAI API.
         response = openai.Completion.create(
-            model="text-chat-davinci-002-20230126",
+            model="text-chat-davinci-002-20221122",
             prompt=formatted_message,
             temperature=0.7,
             max_tokens=500,
